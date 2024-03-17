@@ -20,23 +20,36 @@ repored. For example::
     gunk: U+00A0 (NO-BREAK SPACE) at char 4 line 2
     gunk: U+200B (ZERO WIDTH SPACE) at char 5 line 3
     gunk: U+0009 (HORIZONTAL TAB) at char 1 line 4
-    
+
 Files are by default assumed to contain UTF-8 encoded text, but this
 can be changed with the ``-c`` option.
 
 Building
 ========
 
-This section not yet finished.
+**Prerequisites:** A Go compiler is required. If for some reason you are
+editing the README for this project, `Pandoc <https://pandoc.org/>`_ is required.
+
+Edit ``Makefile`` and set the ``PANDOC_DIR`` and ``GO_DIR`` variables as
+needed. If the directories containing ``pandoc`` and/or ``go`` are in your
+standard search path, define the corresponding variable to be the empty
+string.
+
+Then just type::
+
+    make sccc
 
 Installing
 ==========
 
-This section not yet finished.
+Copy the resulting ``sccc`` binary to the directory of your choice.
 
 Running
 =======
 
-This section not yet finished.
+The general command syntax is:
 
-For more information, see the man page.
+    ``sccc`` [*options*] [*file* ...]
+
+Typing ``sccc -h`` will print a help message listing the available
+options. If no files are specified, standard input will be processed.
