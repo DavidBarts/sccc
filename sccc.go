@@ -37,6 +37,8 @@ var _KNOWN []*unicode.RangeTable
 var row int
 var col int
 
+var written string
+
 func init() {
     _KNOWN = make([]*unicode.RangeTable, len(unicode.Categories))
     i := 0
@@ -72,19 +74,19 @@ func processChar(name string, r rune, size int) {
     if r == _BAD {
         if Charset == nil && size == 1 {
             // Native UTF-8, no Decoder, we know it is bad.
-            log("%s: invalid rune at char %d line %d\n", name, col, row)
+            log(name, "invalid rune at char %d line %d", col, row)
             Status |= 1
             return
         } else if Charset != nil {
             // Decoder used, might be in input.
             if _, isCharmap := Charset.(*charmap.Charmap); isCharmap || IsAscii {
                 // 1-byte charset, not in input
-                log("%s: invalid rune at char %d line %d\n", name, col, row)
+                log(name, "invalid rune at char %d line %d", col, row)
                 Status |= 1
                 return
             } else {
                 // multibyte charset, no way to tell
-                log("%s: possible invalid rune at char %d line %d\n", name, col, row)
+                log(name, "possible invalid rune at char %d line %d", col, row)
                 Status |= 1
             }
         }
@@ -98,7 +100,7 @@ func processChar(name string, r rune, size int) {
         if runeName := RuneName(r); runeName != "" {
             expl = " (" + runeName + ")"
         }
-        log("%s: %U%s at char %d line %d\n", name, r, expl, col, row)
+        log(name, "%U%s at char %d line %d", r, expl, col, row)
         Status |= 1
     }
 }
@@ -107,8 +109,17 @@ func isForbidden(r rune) bool {
     return unicode.In(r, _FORBIDDEN...) || !unicode.In(r, _KNOWN...)
 }
 
-func log(format string, a ...any) {
+func log(name string, format string, a ...any) {
     if !Quiet {
-        fmt.Fprintf(os.Stderr, format, a...)
+        if FilesWithMatches {
+            if written != name {
+                fmt.Fprintf(os.Stdout, "%s\n", name)
+                written = name
+            }
+        } else {
+            fmt.Fprintf(os.Stderr, "%s: ", name)
+            fmt.Fprintf(os.Stderr, format, a...)
+            os.Stderr.WriteString("\n")
+        }
     }
 }
