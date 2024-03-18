@@ -27,13 +27,17 @@ func main() {
         Process("standard input", wrapReader(os.Stdin))
     } else {
         for _, fileName := range fileNames {
-            if inputFile := mustOpen(fileName); inputFile != nil {
-                Process(fileName, wrapReader(inputFile))
-                inputFile.Close()
-            }
+            ProcessFile(fileName)
         }
     }
     os.Exit(Status)
+}
+
+func ProcessFile(fileName string) {
+    if inputFile := mustOpen(fileName); inputFile != nil {
+        Process(fileName, wrapReader(inputFile))
+        inputFile.Close()
+    }
 }
 
 func parseArgs() {
@@ -51,7 +55,7 @@ func parseArgs() {
         os.Exit(0)
     }
     if rawCharset != "" {
-        getCharset(rawCharset)
+        GetCharset(rawCharset)
     }
 }
 
@@ -65,7 +69,7 @@ func shortLongString(sp *string, short string, long string, usage string) {
     flag.StringVar(sp, short, "", usage + " (shorthand).")
 }
 
-func getCharset(rawCharset string) {
+func GetCharset(rawCharset string) {
     var err error
     Charset, err = ianaindex.IANA.Encoding(rawCharset)
     if err != nil {
@@ -98,7 +102,7 @@ func mustOpen(fileName string) io.ReadCloser {
     if err != nil {
         // TODO: make sure this message shows the file name
         fmt.Fprintf(os.Stderr, "%s: %s\n", MyName, err)
-        Status = 1
+        Status |= 2
         return nil
     }
     return ret

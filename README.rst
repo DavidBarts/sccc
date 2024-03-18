@@ -53,3 +53,9 @@ The general command syntax is:
 
 Typing ``sccc -h`` will print a help message listing the available
 options. If no files are specified, standard input will be processed.
+
+Exit status will be 0 if all files were successfully checked and passed, 1
+if any files were found to contain troublesome characters or invalid byte
+sequences, 2 on command-line syntax errors or files that could not be read,
+and 3 if both unreadable files and troublesome byte sequences or invalid
+characters were encountered.

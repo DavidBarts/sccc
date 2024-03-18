@@ -5,7 +5,7 @@ GO_DIR = /usr/local/go/bin/
 
 all: README.md sccc
 
-# Because I dislike Markdown (syntictically significant end-of-line
+# Because I dislike Markdown (syntactically significant end-of-line
 # whitespace, really?), I maintain the README for this project in
 # reStructuredText.
 
