@@ -12,8 +12,8 @@ There not being any standard utilities I could find to detect and report
 such things, I decided to write one.
 
 For each offending character, the numeric code point, the descriptive
-name of the character (if available), and the line and character offsets
-are repored. For example:
+name of the character (if available), and the line (row) and character
+(column) offsets (1-based) are reported. For example:
 
     $ sccc gunk
     gunk: U+00A0 (NO-BREAK SPACE) at char 4 line 2
