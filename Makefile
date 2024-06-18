@@ -10,7 +10,9 @@ all: README.md sccc
 # reStructuredText.
 
 %.md: %.rst
-	$(PANDOC_DIR)pandoc -f rst -t markdown_strict -o $@ $<
+	$(PANDOC_DIR)pandoc -f rst -t markdown_strict -o temp.md $<
+	cat do_not_edit.md temp.md > $@
+	rm -f temp.md
 
 sccc: main.go runenames.go sccc.go
 	$(GO_DIR)go build
