@@ -68,12 +68,16 @@ func GetCharset(rawCharset string) {
         fmt.Fprintf(os.Stderr, "%s: unsupported charset %q\n", MyName, rawCharset)
         os.Exit(2)
     }
-    if name, err := ianaindex.IANA.Name(Charset); err == nil && name == "US-ASCII" {
+    name, err := ianaindex.IANA.Name(Charset)
+    if err != nil {
+        return
+    }
+    if name == "US-ASCII" {
         IsAscii = true
     } else {
         IsAscii = false
     }
-    if name, err := ianaindex.IANA.Name(Charset); err == nil && name == "UTF-8" {
+    if name == "UTF-8" {
         // use internal codec
         Charset = nil
     }
