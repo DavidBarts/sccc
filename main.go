@@ -2,13 +2,13 @@ package main
 
 import (
     "bufio"
-    "flag"
     "fmt"
     "io"
     "os"
     "path/filepath"
     "golang.org/x/text/encoding"
     "golang.org/x/text/encoding/ianaindex"
+    "github.com/spf13/pflag"
 )
 
 var MyName string
@@ -22,7 +22,7 @@ var Status int
 func main() {
     Status = 0
     parseArgs()
-    fileNames := flag.Args()
+    fileNames := pflag.Args()
     if len(fileNames) == 0 {
         Process("standard input", wrapReader(os.Stdin))
     } else {
@@ -44,29 +44,17 @@ func parseArgs() {
     var rawCharset string
     var help bool
     MyName = filepath.Base(os.Args[0])
-    shortLongString(&Allow, "a", "allow", "Additional characters to allow")
-    shortLongString(&rawCharset, "c", "charset", "Use this charset (coding), instead of UTF-8")
-    shortLongBool(&help, "h", "help", "Print this help message")
-    shortLongBool(&FilesWithMatches, "l", "files-with-matches", "Print file names only")
-    shortLongBool(&Quiet, "q", "quiet", "Suppress output")
-    flag.Parse()
+    pflag.StringVarP(&Allow, "allow", "a", "", "Additional characters to allow")
+    pflag.StringVarP(&rawCharset, "charset", "c", "UTF-8", "Use this charset (coding)")
+    pflag.BoolVarP(&help, "help", "h", false, "Print this help message")
+    pflag.BoolVarP(&FilesWithMatches, "files-with-matches", "l", false, "Print file names only")
+    pflag.BoolVarP(&Quiet, "quiet", "q", false, "Suppress output")
+    pflag.Parse()
     if help {
-        flag.PrintDefaults()
+        pflag.PrintDefaults()
         os.Exit(0)
     }
-    if rawCharset != "" {
-        GetCharset(rawCharset)
-    }
-}
-
-func shortLongBool(bp *bool, short string, long string, usage string) {
-    flag.BoolVar(bp, long, false, usage + ".")
-    flag.BoolVar(bp, short, false, usage + " (shorthand).")
-}
-
-func shortLongString(sp *string, short string, long string, usage string) {
-    flag.StringVar(sp, long, "", usage + ".")
-    flag.StringVar(sp, short, "", usage + " (shorthand).")
+    GetCharset(rawCharset)
 }
 
 func GetCharset(rawCharset string) {
@@ -84,6 +72,10 @@ func GetCharset(rawCharset string) {
         IsAscii = true
     } else {
         IsAscii = false
+    }
+    if name, err := ianaindex.IANA.Name(Charset); err == nil && name == "UTF-8" {
+        // use internal codec
+        Charset = nil
     }
 }
 
