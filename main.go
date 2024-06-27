@@ -51,6 +51,9 @@ func parseArgs() {
     pflag.BoolVarP(&Quiet, "quiet", "q", false, "Suppress output")
     pflag.Parse()
     if help {
+        fmt.Println("SCCC: Source Code Character Checker")
+        fmt.Println("syntax: sccc [options] [files]")
+        fmt.Println("Options:")
         pflag.PrintDefaults()
         os.Exit(0)
     }
