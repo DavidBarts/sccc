@@ -72,11 +72,7 @@ func GetCharset(rawCharset string) {
     if err != nil {
         return
     }
-    if name == "US-ASCII" {
-        IsAscii = true
-    } else {
-        IsAscii = false
-    }
+    IsAscii = name == "US-ASCII"
     if name == "UTF-8" {
         // use internal codec
         Charset = nil
