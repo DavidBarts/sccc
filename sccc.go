@@ -74,19 +74,19 @@ func processChar(name string, r rune, size int) {
     if r == _BAD {
         if Charset == nil && size == 1 {
             // Native UTF-8, no Decoder, we know it is bad.
-            log(name, "invalid rune at char %d line %d", col, row)
+            log(name, "invalid rune at line %d char %d", row, col)
             Status |= 1
             return
         } else if Charset != nil {
             // Decoder used, might be in input.
             if _, isCharmap := Charset.(*charmap.Charmap); isCharmap || IsAscii {
                 // 1-byte charset, not in input
-                log(name, "invalid rune at char %d line %d", col, row)
+                log(name, "invalid rune at line %d char %d", row, col)
                 Status |= 1
                 return
             } else {
                 // multibyte charset, no way to tell
-                log(name, "possible invalid rune at char %d line %d", col, row)
+                log(name, "possible invalid rune at line %d char %d", row, col)
                 Status |= 1
             }
         }
@@ -100,7 +100,7 @@ func processChar(name string, r rune, size int) {
         if runeName := RuneName(r); runeName != "" {
             expl = " (" + runeName + ")"
         }
-        log(name, "%U%s at char %d line %d", r, expl, col, row)
+        log(name, "%U%s at line %d char %d", r, expl, row, col)
         Status |= 1
     }
 }
