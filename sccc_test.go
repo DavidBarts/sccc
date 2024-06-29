@@ -173,3 +173,9 @@ func TestEmojis(t *testing.T) {
     testStdFile("duck_turkey.txt")
     shouldPass(t)
 }
+
+// unassibned char should fail
+func TestUnassigned(t *testing.T) {
+    testStdFile("unassigned.txt")
+    shouldFail(t)
+}
